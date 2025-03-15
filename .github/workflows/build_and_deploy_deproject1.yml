@@ -14,6 +14,10 @@ env:
   SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}
   SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_DEV }}
   SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA_DEV }}
+  SNOWFLAKE_CONNECTIONS_MYCONNECTION_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD_DEV }}
+  SNOWFLAKE_CONNECTIONS_MYCONNECTION_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}
+  SNOWFLAKE_CONNECTIONS_MYCONNECTION_USER: ${{ secrets.SNOWFLAKE_USER_DEV }}
+  SNOWFLAKE_CONNECTIONS_MYCONNECTION_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_DEV }}
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -39,8 +43,18 @@ jobs:
       - name: Install Python packages
         run: pip install -r requirements.txt
 
+      - name: Setup snowcli
+        uses: Snowflake-Labs/snowflake-cli-action@v1
+        with:
+          cli-version: "latest"
+          default-config-file-path: "config.toml"
+
+      - name: copy sql file
+        working-directory: DE_PROJECT_1/app
+        run: snow stage copy load_to_emp_tgt.sql @dev_deployment/de_project_1/
+
       - name: Deploy Snowpark apps
-        working-directory: first_snowpark_project
+        working-directory: DE_PROJECT_1
         env:
           SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}
           SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER_DEV }}
@@ -51,9 +65,14 @@ jobs:
           SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA_DEV }}
         run: python deploy_snowpark_app.py $GITHUB_WORKSPACE/first_snowpark_project
 
-      - name: Make connection with snowflake
-        run: snow connection add --account $SNOWFLAKE_ACCOUNT --user $SNOWFLAKE_USER --password $SNOWFLAKE_PASSWORD --role $SNOWFLAKE_ROLE --warehouse $SNOWFLAKE_WAREHOUSE --database $SNOWFLAKE_DATABASE --schema $SNOWFLAKE_SCHEMA
-
-      - name: copy sql file
+      - name: Deploy Snowpark tasks
+        env:
+          SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}
+          SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER_DEV }}
+          SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD_DEV }}
+          SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE_DEV }}
+          SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}
+          SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_DEV }}
+          SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA_DEV }}
         working-directory: DE_PROJECT_1/app
-        run: snow stage copy load_to_emp_tgt.sql @dev_deployment/de_project_1/
+        run: python create_task.py
