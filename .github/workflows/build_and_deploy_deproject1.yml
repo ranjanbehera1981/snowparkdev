@@ -55,5 +55,5 @@ jobs:
         run: snow connection add --account $SNOWFLAKE_ACCOUNT --user $SNOWFLAKE_USER --password $SNOWFLAKE_PASSWORD --role $SNOWFLAKE_ROLE --warehouse $SNOWFLAKE_WAREHOUSE --database $SNOWFLAKE_DATABASE --schema $SNOWFLAKE_SCHEMA
 
       - name: copy sql file
-        working-diractory: DE_PROJECT_1/app
+        working-directory: DE_PROJECT_1/app
         run: snow stage copy load_to_emp_tgt.sql @dev_deployment/de_project_1/
