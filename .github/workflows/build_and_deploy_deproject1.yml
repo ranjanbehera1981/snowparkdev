@@ -6,14 +6,14 @@ on:
     branches:
       - dev
   
-  env:
-    SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}
-    SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER_DEV }}
-    SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD_DEV }}
-    SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE_DEV }}
-    SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}
-    SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_DEV }}
-    SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA_DEV }}
+env:
+  SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT_DEV }}
+  SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER_DEV }}
+  SNOWFLAKE_PASSWORD: ${{ secrets.SNOWFLAKE_PASSWORD_DEV }}
+  SNOWFLAKE_ROLE: ${{ secrets.SNOWFLAKE_ROLE_DEV }}
+  SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}
+  SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_DEV }}
+  SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA_DEV }}
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
@@ -57,5 +57,3 @@ jobs:
       - name: copy sql file
         working-diractory: DE_PROJECT_1/app
         run: snow stage copy load_to_emp_tgt.sql @dev_deployment/de_project_1/
-
-      - name: Deploy Snowpark apps
