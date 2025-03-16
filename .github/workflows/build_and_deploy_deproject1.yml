@@ -64,7 +64,7 @@ jobs:
           SNOWFLAKE_WAREHOUSE: ${{ secrets.SNOWFLAKE_WAREHOUSE_DEV }}
           SNOWFLAKE_DATABASE: ${{ secrets.SNOWFLAKE_DATABASE_DEV }}
           SNOWFLAKE_SCHEMA: ${{ secrets.SNOWFLAKE_SCHEMA_DEV }}
-        run: python deploy_snowpark_app.py $GITHUB_WORKSPACE/first_snowpark_project
+        run: python deploy_snowpark_app.py $GITHUB_WORKSPACE/DE_PROJECT_1
 
       - name: Deploy Snowpark tasks
         env:
