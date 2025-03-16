@@ -38,8 +38,11 @@ print(root)
 
 # Create dag
 with DAG("dag_copy_emp", schedule=timedelta(days=1), use_func_return_value=True, stage_location='@dev_deployment', warehouse="compute_wh") as dag:
-    dag_task_1 = DAGTask("copy_from_s3", StoredProcedureCall(procedures.copy_to_table_proc, packages=["snowflake-snowpark-python"], imports=["@dev_deployment/my_de_project_1/app.zip"], stage_location="@dev_deployment"), warehouse="compute_wh")
-
+    dag_task_1 = DAGTask("copy_from_s3", StoredProcedureCall(procedures.copy_to_table_proc, packages=["snowflake-snowpark-python"], imports=["@dev_deployment/de_project_1/app.zip"], stage_location="@dev_deployment"), warehouse="compute_wh")
+    dag_task_2 = DAGTask("execute_sql_statement", StoredProcedureCall(procedures.execute_sql_statement, packages=["snowflake-snowpark-python"], imports=["@dev_deployment/de_project_1/app.zip"], stage_location="@dev_deployment"), warehouse="compute_wh")
+    
+    dag_task_1 >> dag_task_2
+    
 schema = root.databases["snowpark"].schemas["snowschema"]
 dag_op = DAGOperation(schema)
 dag_op.deploy(dag, CreateMode.or_replace)
