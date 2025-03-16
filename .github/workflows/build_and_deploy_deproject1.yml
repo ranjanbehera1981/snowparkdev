@@ -51,7 +51,7 @@ jobs:
           default-config-file-path: "config.toml"
 
       - name: copy sql file
-        working-directory: DE_PROJECT_1/app
+        working-directory: DE_PROJECT_1/app/
         run: snow stage copy load_to_emp_tgt.sql @dev_deployment/de_project_1/
 
       - name: Deploy Snowpark apps
