@@ -19,7 +19,7 @@ def copy_to_table_proc(session: Session)-> str:
     copied_into_result, qid = copy_to_table(session, configs.employee_config, schemas.emp_stg_schema)
     
 def execute_sql_statement(session: Session)-> None:
-    session.sql("EXECUTE IMMEDIATE FROM @dev_deployment/de_project_1/merge_statement.sql").collect()
+    session.sql("EXECUTE IMMEDIATE FROM @dev_deployment/de_project_1/load_to_emp_tgt.sql").collect()
     
 # For local debugging
 # Beware you may need to type-convert arguments if you add input parameters
